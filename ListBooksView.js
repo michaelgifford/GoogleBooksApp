@@ -8,6 +8,7 @@ var FAKE_DATA = [
 var REQUEST_URL = 'https://www.googleapis.com/books/v1/volumes?q=subject:fiction';
  
 var React = require('react-native');
+var ItemDetail = require('./ItemDetail');
 
 var {
     Image,
@@ -26,11 +27,11 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#DCDCDC',
+        backgroundColor: '#f1f1f1',
         padding: 10
     },
     listView: {
-       backgroundColor: '#DCDCDC',
+       backgroundColor: '#f1f1f1',
        marginTop: 65
     },
     separator: {
@@ -61,25 +62,6 @@ var styles = StyleSheet.create({
  
 class ListBooksView extends Component {
 
-    renderItem(item) {
-       return (
-            <TouchableHighlight>
-                <View>
-                    <View style={styles.container}>
-                        <Image
-                            source={{uri: item.volumeInfo.imageLinks.thumbnail}}
-                            style={styles.thumbnail} />
-                        <View style={styles.rightContainer}>
-                            <Text style={styles.title}>{item.volumeInfo.title}</Text>
-                            <Text style={styles.author}>{item.volumeInfo.authors}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.separator} />
-                </View>
-            </TouchableHighlight>
-       );
-   }
-
     constructor(props) {
        super(props);
        this.state = {
@@ -105,32 +87,60 @@ class ListBooksView extends Component {
        })
        .done();
    }
-  
 
-render() {
-       if (this.state.isLoading) {
-           return this.renderLoadingView();
-       }
- 
+    showItemDetail(item) {
+       this.props.navigator.push({
+           title: item.volumeInfo.title,
+           component: ItemDetail,
+           passProps: {item}
+       });
+   }
+  
+    renderItem(item) {
        return (
-            <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this.renderItem.bind(this)}
-                style={styles.listView}/>
+            <TouchableHighlight onPress={() => this.showItemDetail(item)}  underlayColor='#dddddd'>
+                <View>
+                    <View style={styles.container}>
+                        <Image
+                            source={{uri: item.volumeInfo.imageLinks.thumbnail}}
+                            style={styles.thumbnail} />
+                        <View style={styles.rightContainer}>
+                            <Text style={styles.title}>{item.volumeInfo.title}</Text>
+                            <Text style={styles.author}>{item.volumeInfo.authors}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.separator} />
+                </View>
+            </TouchableHighlight>
+       );
+   }
+
+    render() {
+           if (this.state.isLoading) {
+               return this.renderLoadingView();
+           }
+     
+           return (
+                <ListView
+                    dataSource={this.state.dataSource}
+                    renderRow={this.renderItem.bind(this)}
+                    style={styles.listView}/>
+            );
+    }
+
+        
+    renderLoadingView() {
+        return (
+            <View style={styles.viewLoading}>
+                <ActivityIndicatorIOS
+                    size='large'/>
+                <Text>
+                    Loading...
+                </Text>
+            </View>
         );
-}  
-    
-renderLoadingView() {
-    return (
-        <View style={styles.viewLoading}>
-            <ActivityIndicatorIOS
-                size='large'/>
-            <Text>
-                Loading...
-            </Text>
-        </View>
-    );
-}
+    }
+
 }
  
 module.exports = ListBooksView;
