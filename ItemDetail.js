@@ -16,8 +16,8 @@ var styles = StyleSheet.create({
         alignItems: 'center'
     },
     image: {
-        width: 107,
-        height: 165,
+        width: 165,
+        height: 254,
         padding: 10
     },
     description: {
