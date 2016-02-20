@@ -9,7 +9,7 @@ $ npm start
 
 Open Xcode, select a iOS simulator, & click the play button or cmd + R
 
-#Usage in iOS Device
+#Usage on iOS Device
 Note: has not been tested on a device
 
 1.) Check official React-Native doument at http://facebook.github.io/react-native/docs/running-on-device-ios.html#using-offline-bundle for updates, steps based on official document
